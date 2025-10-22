@@ -19,7 +19,7 @@ let prosessTidslinje = gsap.timeline({
     scrollTrigger: {
         trigger: "#scene-2", // Animasjonen skjer i Scene 2
         start: "center center",      // Start når Scene 2 er sentrert på skjermen (mye senere)
-        end: "bottom bottom",  // Slutt når bunnen av Scene 2 treffer bunnen av skjermen (lengre tid)
+        end: "bottom top",  // Slutt når bunnen av Scene 2 treffer toppen av skjermen
         scrub: 1,              // Jevn, liten "lag" i stedet for 1:1-kontroll
     }
 });
@@ -28,7 +28,7 @@ let prosessTidslinje = gsap.timeline({
 
 // 1. Partikkelen beveger seg fra Kilde til Boks (bruker 40% av tiden)
 prosessTidslinje.to(".anim-co2-partikkel", {
-    x: 350, // Flytter den horisontalt til Hoop CO2 Rensing
+    x: 375, // Flytter den horisontalt til Hoop CO2 Rensing
     ease: "none",
     duration: 0.4 // Bruker 40% av total animasjonstid
 });
@@ -42,7 +42,7 @@ prosessTidslinje.to(".anim-co2-partikkel", {
 
 // 3. Partikkelen beveger seg fra Boks til Kunde (bruker 50% av tiden)
 prosessTidslinje.to(".anim-co2-partikkel", {
-    x: 700, // Flytter den helt til Bryggeri
+    x: 750, // Flytter den helt til Bryggeri
     ease: "none",
     duration: 0.5 // Bruker 50% av total animasjonstid
 });

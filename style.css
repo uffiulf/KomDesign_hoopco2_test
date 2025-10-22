@@ -116,23 +116,26 @@ p {
   margin-top: 100px;
 }
 
-.anim-element {
-  width: 100px;
-  height: 100px;
-  border: 3px solid #333a45;
-  border-radius: 8px;
-  position: relative;
-  background-color: #fff;
-}
-
 .anim-label {
-  position: absolute;
-  bottom: -40px;
+  position: static;
+  bottom: auto;
   width: 100%;
   text-align: center;
   font-size: 0.9rem;
   font-weight: bold;
   color: #333a45;
+  margin-top: 15px;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px; /* Gir en fast bredde for layout */
+}
+
+.anim-icon {
+  color: #333a45; /* Mørk farge for ikonene */
 }
 
 .anim-co2-partikkel {
@@ -141,8 +144,8 @@ p {
   background-color: #d9534f;
   border-radius: 50%;
   position: absolute;
-  top: 35px;
-  left: 35px;
+  top: 10px;
+  left: 45px;
 }
 
 /* BECCS-animasjon styling */
@@ -158,10 +161,8 @@ p {
 #beccs-skip {
   position: absolute;
   top: 20px;
-  left: 30%;
-  width: 100px;
-  height: 40px;
-  background: #555;
+  left: calc(30% - 15px);
+  color: #333a45;
 }
 
 #beccs-rør {
@@ -228,4 +229,43 @@ p {
 .unverified { 
   background-color: #d9534f; 
   color: white; 
+}
+
+/* Kildeseksjon styling */
+.scene-kilder {
+  padding: 80px 40px;
+  background-color: #f9f9f9;
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scene-kilder h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.scene-kilder ol {
+  padding-left: 20px;
+}
+
+.scene-kilder li {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.scene-kilder a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.scene-kilder a:hover {
+  text-decoration: underline;
+}
+
+sup a {
+  text-decoration: none;
+  color: #0056b3;
+  font-weight: bold;
 }

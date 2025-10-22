@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fra Avløp til Bobler: Hoop CO2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
   <section class="scene" id="scene-1">
     <div class="content">
       <h2>Problemet</h2>
-      <p>Industrielle prosesser slipper ut enorme mengder CO₂ i atmosfæren.</p>
+      <p class="fade-in-text">Fra anlegg som Veas slippes enorme mengder biogent CO2 ut...<sup><a href="#kilder">1</a></sup></p>
       <div class="problem-visual">
         <div class="factory">🏭</div>
         <div class="smoke">💨</div>
@@ -38,17 +39,20 @@
       </div>
       
       <div id="infografikk-1">
-        <div class="anim-element" id="anim-kilde">
+        <div class="icon-container">
+          <i class="fa-solid fa-industry fa-3x anim-icon"></i>
           <div class="anim-label">Biogassanlegg (Kilde)</div>
         </div>
 
         <div class="anim-co2-partikkel"></div>
 
-        <div class="anim-element" id="anim-boks">
+        <div class="icon-container">
+          <i class="fa-solid fa-box-open fa-3x anim-icon"></i>
           <div class="anim-label">Hoop CO2 Rensing</div>
         </div>
 
-        <div class="anim-element" id="anim-kunde">
+        <div class="icon-container">
+          <i class="fa-solid fa-beer-mug-empty fa-3x anim-icon"></i>
           <div class="anim-label">Bryggeri (Kunde)</div>
         </div>
       </div>
@@ -58,7 +62,7 @@
   <section class="scene" id="scene-3">
     <div class="content">
       <h2>Resultatet</h2>
-      <p>Renere luft og verdifulle produkter fra det som tidligere var avfall.</p>
+      <p class="fade-in-text">Den rensede, flytende CO2-en selges...<sup><a href="#kilder">2</a></sup></p>
       <div class="result-visual">
         <div class="clean-air">🌱</div>
         <div class="products">📦</div>
@@ -69,11 +73,11 @@
   <section class="scene" id="scene-4">
     <div class="content">
       <h2 class="fade-in-text">Alternativet (BECCS): Permanent Lagring</h2>
-      <p class="fade-in-text">Hoop CO2 sin andre vei er BECCS. Her selges den fangede CO2-en til prosjekter som Northern Lights, som lagrer den permanent.</p>
+      <p class="fade-in-text">Hoop CO2 sin andre vei er BECCS. Her selges den fangede CO2-en til prosjekter som Northern Lights, som lagrer den permanent.<sup><a href="#kilder">3</a></sup></p>
 
       <div class="infographic-placeholder" id="infografikk-2">
         <div class="anim-label" id="beccs-label-1">Renset CO2</div>
-        <div class="anim-element" id="beccs-skip">Skip</div>
+        <i class="fa-solid fa-ship fa-2x" id="beccs-skip"></i>
         <div class="anim-element" id="beccs-rør"></div>
         <div class="anim-element" id="beccs-havbunn">Havbunn (2600m)</div>
       </div>
@@ -83,7 +87,7 @@
   <section class="scene" id="scene-5">
     <div class="content">
       <h2 class="fade-in-text">Konteksten: Tillit er Alt</h2>
-      <p class="fade-in-text">Hoops modeller gir sporbar, målbar klimanytte. Men det globale markedet er i krise.</p>
+      <p class="fade-in-text">Hoops modeller gir sporbar, målbar klimanytte. Men det globale markedet er i krise.<sup><a href="#kilder">4</a></sup></p>
 
       <div class="comparison-container">
         <div class="comparison-box" id="hoop-modell">
@@ -98,6 +102,16 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section id="kilder" class="scene-kilder">
+    <h2>Kilder</h2>
+    <ol>
+      <li><a href="https://www.veas.no/om-veas/energi-og-klimagassregnskap/">VEAS.no: Energi- og klimagassregnskap</a></li>
+      <li><a href="https://hoopco2.com/our-projects/veas/">HoopCO2.com: Our Projects - VEAS (CCU)</a></li>
+      <li><a href="https://hoopco2.com/beccs/">HoopCO2.com: BECCS</a></li>
+      <li><a href="https://www.dw.com/en/how-a-chinese-firm-ran-a-billion-euro-carbon-credit-scam/a-71010148">DW.com: How a Chinese firm ran a billion-euro carbon credit scam</a></li>
+    </ol>
   </section>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
