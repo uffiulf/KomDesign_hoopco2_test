@@ -1,6 +1,70 @@
 // Registrer ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
+// Styrer synligheten til telleren
+gsap.to(".teller", {
+    opacity: 1,
+    visibility: 'visible',
+    scrollTrigger: {
+        trigger: "#scene-1",
+        start: "top 70%",
+        endTrigger: "#scene-5",
+        end: "bottom 30%",
+        toggleActions: "play reverse play reverse"
+    }
+});
+
+// --- SCENE 2: PROSESS-ANIMASJON (CCU) ---
+let prosessTidslinje = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#scene-2", // Animasjonen skjer i Scene 2
+        start: "center center",      // Start når Scene 2 er sentrert på skjermen (mye senere)
+        end: "bottom bottom",  // Slutt når bunnen av Scene 2 treffer bunnen av skjermen (lengre tid)
+        scrub: 1,              // Jevn, liten "lag" i stedet for 1:1-kontroll
+    }
+});
+
+// Nå legger vi til stegene i animasjonen
+
+// 1. Partikkelen beveger seg fra Kilde til Boks (bruker 40% av tiden)
+prosessTidslinje.to(".anim-co2-partikkel", {
+    x: 350, // Flytter den horisontalt til Hoop CO2 Rensing
+    ease: "none",
+    duration: 0.4 // Bruker 40% av total animasjonstid
+});
+
+// 2. Partikkelen blir "renset" (byter farge) når den er i boksen
+prosessTidslinje.to(".anim-co2-partikkel", {
+    backgroundColor: "#28a745", // Bytter til "ren" grønnfarge
+    ease: "none",
+    duration: 0.1 // Kort pause for fargeendring
+});
+
+// 3. Partikkelen beveger seg fra Boks til Kunde (bruker 50% av tiden)
+prosessTidslinje.to(".anim-co2-partikkel", {
+    x: 700, // Flytter den helt til Bryggeri
+    ease: "none",
+    duration: 0.5 // Bruker 50% av total animasjonstid
+});
+
+// --- SLUTT PÅ SCENE 2-ANIMASJON ---
+
+// --- SCENE 4: PROSESS-ANIMASJON (BECCS) ---
+let beccsTidslinje = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#scene-4",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+    }
+});
+
+// 1. Røret animeres nedover mot havbunnen
+beccsTidslinje.to("#beccs-rør", {
+    height: 240, // Animerer høyden
+    ease: "none"
+});
+
 // CO₂-teller animasjon
 let co2Counter = { value: 0 };
 let counterElement = document.getElementById("co2-teller");
@@ -131,4 +195,16 @@ gsap.to(".teller", {
     },
     color: "#28a745",
     duration: 0.5
+});
+
+// --- SCENE 5: SAMMENLIGNING FADE-IN ---
+gsap.from(".comparison-container", {
+    opacity: 0,
+    y: 30,
+    duration: 1.0,
+    scrollTrigger: {
+        trigger: "#scene-5",
+        start: "top 60%",
+        toggleActions: "play none none none"
+    }
 });
