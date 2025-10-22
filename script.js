@@ -1,56 +1,79 @@
-// Registrer ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
-// Styrer synligheten til telleren
-gsap.to(".teller", {
-    opacity: 1,
-    visibility: 'visible',
+// --- 0. LASTE-ANIMASJON ---
+const loader = document.getElementById('loader');
+window.addEventListener('load', () => {
+    gsap.to(loader, { opacity: 0, duration: 0.5, onComplete: () => loader.style.display = 'none' });
+});
+
+// --- 1. HOVEDFUNKSJON FOR SCROLLYTELLING ---
+function initScrollytelling() {
+    // Hent alle tekstelementene
+    const textScenes = gsap.utils.toArray('.text-scene');
+
+    // Loop gjennom hver tekst-scene
+    textScenes.forEach((scene, i) => {
+        const graphicStep = document.querySelector(`.graphic-step[data-index="${i}"]`);
+
+        ScrollTrigger.create({
+            trigger: scene,
+            start: 'top center',
+            end: 'bottom center',
+            // Marker/avmarker aktivt steg
+            onToggle: self => {
+                if (self.isActive) {
+                    scene.classList.add('is-active');
+                    if (graphicStep) graphicStep.classList.add('is-active');
+                } else {
+                    scene.classList.remove('is-active');
+                    if (graphicStep) graphicStep.classList.remove('is-active');
+                }
+            },
+        });
+    });
+
+    // Gi de grafiske stegene en data-index som matcher tekst-scenene
+    gsap.utils.toArray('.graphic-step').forEach((step, i) => {
+        step.setAttribute('data-index', i);
+    });
+
+    // Sørg for at det første steget er aktivt fra start
+    document.querySelector('.text-scene').classList.add('is-active');
+    document.querySelector('.graphic-step[data-index="0"]').classList.add('is-active');
+}
+
+initScrollytelling(); // Kjør hovedfunksjonen
+
+// --- 2. TELLER-ANIMASJON (Scene 1) ---
+gsap.to("#co2-teller", {
+    innerText: 8000,
+    snap: "innerText",
+    ease: "none",
     scrollTrigger: {
         trigger: "#scene-1",
-        start: "top 70%",
-        endTrigger: "#scene-5",
-        end: "bottom 30%",
-        toggleActions: "play reverse play reverse"
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
     }
 });
 
-// --- SCENE 2: PROSESS-ANIMASJON (CCU) ---
+// --- 3. CCU PROSESS-ANIMASJON (Scene 2) ---
 let prosessTidslinje = gsap.timeline({
     scrollTrigger: {
-        trigger: "#scene-2", // Animasjonen skjer i Scene 2
-        start: "center center",      // Start når Scene 2 er sentrert på skjermen (mye senere)
-        end: "bottom top",  // Slutt når bunnen av Scene 2 treffer toppen av skjermen
-        scrub: 1,              // Jevn, liten "lag" i stedet for 1:1-kontroll
+        trigger: "#scene-2",
+        start: "top top",
+        end: "bottom top", // Fiks for hastighet
+        scrub: 1, // Fiks for hastighet
     }
 });
+prosessTidslinje.to(".anim-co2-partikkel", { x: 375, ease: "none" });
+prosessTidslinje.to(".anim-co2-partikkel", { backgroundColor: "var(--color-green)", ease: "none" }, "-=0.2");
+prosessTidslinje.to(".anim-co2-partikkel", { x: 750, ease: "none" });
 
-// Nå legger vi til stegene i animasjonen
-
-// 1. Partikkelen beveger seg fra Kilde til Boks (bruker 40% av tiden)
-prosessTidslinje.to(".anim-co2-partikkel", {
-    x: 375, // Flytter den horisontalt til Hoop CO2 Rensing
+// --- 4. BECCS PROSESS-ANIMASJON (Scene 4) (SVG "DRAW") ---
+gsap.to("#beccs-pipe-path", {
+    strokeDashoffset: 0, // Animerer "tegningen" av linjen
     ease: "none",
-    duration: 0.4 // Bruker 40% av total animasjonstid
-});
-
-// 2. Partikkelen blir "renset" (byter farge) når den er i boksen
-prosessTidslinje.to(".anim-co2-partikkel", {
-    backgroundColor: "#28a745", // Bytter til "ren" grønnfarge
-    ease: "none",
-    duration: 0.1 // Kort pause for fargeendring
-});
-
-// 3. Partikkelen beveger seg fra Boks til Kunde (bruker 50% av tiden)
-prosessTidslinje.to(".anim-co2-partikkel", {
-    x: 750, // Flytter den helt til Bryggeri
-    ease: "none",
-    duration: 0.5 // Bruker 50% av total animasjonstid
-});
-
-// --- SLUTT PÅ SCENE 2-ANIMASJON ---
-
-// --- SCENE 4: PROSESS-ANIMASJON (BECCS) ---
-let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
         trigger: "#scene-4",
         start: "top top",
@@ -59,151 +82,68 @@ let beccsTidslinje = gsap.timeline({
     }
 });
 
-// 1. Røret animeres nedover mot havbunnen
-beccsTidslinje.to("#beccs-rør", {
-    height: 240, // Animerer høyden
-    ease: "none"
-});
+// --- 5. BOBLE-GENERATOR (Scene 1) ---
+const bubbleContainer = document.getElementById('bubble-container');
+let bubbleInterval; // Vi definerer intervallet her
 
-// CO₂-teller animasjon
-let co2Counter = { value: 0 };
-let counterElement = document.getElementById("co2-teller");
+function createBubble() {
+    if (!bubbleContainer) return; // Sikkerhetssjekk
 
-// Animasjon for CO₂-telleren (Scene 1)
-gsap.timeline({
-    scrollTrigger: {
-        trigger: "#scene-1",
-        start: "top center",
-        end: "bottom center",
-        scrub: 1,
-        onUpdate: function() {
-            counterElement.textContent = Math.round(co2Counter.value) + " CO₂";
-        }
-    }
-}).to(co2Counter, {
-    value: 5000,
-    ease: "none"
-});
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
 
-// Animasjoner for Scene 0 (Intro)
-gsap.timeline({
-    scrollTrigger: {
-        trigger: "#scene-0",
-        start: "top center",
-        end: "bottom center",
-        scrub: 1
-    }
-}).from("#scene-0 h1", {
-    y: 100,
-    opacity: 0,
-    duration: 1
-}).from("#scene-0 h2", {
-    y: 100,
-    opacity: 0,
-    duration: 1
-}, "-=0.5").from("#scene-0 p", {
-    y: 50,
-    opacity: 0,
-    duration: 1
-}, "-=0.3");
+    // Random størrelse
+    const size = Math.random() * 40 + 10 + 'px'; // 10px til 50px
+    bubble.style.width = size;
+    bubble.style.height = size;
 
-// Animasjoner for Scene 1 (Problemet)
-gsap.timeline({
-    scrollTrigger: {
-        trigger: "#scene-1",
-        start: "top center",
-        end: "bottom center",
-        scrub: 1
-    }
-}).from("#scene-1 h2", {
-    y: 100,
-    opacity: 0,
-    duration: 1
-}).from("#scene-1 p", {
-    y: 50,
-    opacity: 0,
-    duration: 1
-}, "-=0.5").from(".factory", {
-    scale: 0,
-    opacity: 0,
-    duration: 1
-}, "-=0.3").from(".smoke", {
-    x: -100,
-    opacity: 0,
-    duration: 1
-}, "-=0.5");
+    // Random posisjon (horisontalt)
+    bubble.style.left = Math.random() * 100 + '%';
 
-// Animasjoner for Scene 2 (Løsningen)
-gsap.timeline({
-    scrollTrigger: {
-        trigger: "#scene-2",
-        start: "top center",
-        end: "bottom center",
-        scrub: 1
-    }
-}).from("#scene-2 h2", {
-    y: 100,
-    opacity: 0,
-    duration: 1
-}).from("#scene-2 p", {
-    y: 50,
-    opacity: 0,
-    duration: 1
-}, "-=0.5").from(".hoop-device", {
-    rotation: 360,
-    scale: 0,
-    opacity: 0,
-    duration: 1
-}, "-=0.3").from(".bubbles", {
-    scale: 0,
-    opacity: 0,
-    duration: 1
-}, "-=0.5");
+    // Random animasjons-varighet
+    bubble.style.animationDuration = Math.random() * 5 + 8 + 's'; // 8s til 13s
 
-// Animasjoner for Scene 3 (Resultatet)
-gsap.timeline({
-    scrollTrigger: {
-        trigger: "#scene-3",
-        start: "top center",
-        end: "bottom center",
-        scrub: 1
-    }
-}).from("#scene-3 h2", {
-    y: 100,
-    opacity: 0,
-    duration: 1
-}).from("#scene-3 p", {
-    y: 50,
-    opacity: 0,
-    duration: 1
-}, "-=0.5").from(".clean-air", {
-    scale: 0,
-    opacity: 0,
-    duration: 1
-}, "-=0.3").from(".products", {
-    scale: 0,
-    opacity: 0,
-    duration: 1
-}, "-=0.5");
+    // Random animasjons-forsinkelse
+    bubble.style.animationDelay = Math.random() * 3 + 's';
 
-// Fargeendring på telleren når vi kommer til løsningen
-gsap.to(".teller", {
-    scrollTrigger: {
-        trigger: "#scene-2",
-        start: "top center",
-        toggleActions: "play none none reverse"
+    bubbleContainer.appendChild(bubble);
+
+    // Fjern boblen fra DOM etter at animasjonen er ferdig
+    setTimeout(() => {
+        bubble.remove();
+    }, 13000); // Litt lenger enn maks animasjonstid
+}
+
+// Styrer når boble-maskinen skal skrus av og på
+ScrollTrigger.create({
+    trigger: "#scene-1",
+    start: "top bottom", // Når toppen av scenen treffer bunnen av skjermen
+    end: "bottom top", // Når bunnen av scenen treffer toppen
+
+    // Når vi scroller INN i scenen:
+    onEnter: () => {
+        // Start å lage bobler hvert 300ms
+        bubbleInterval = setInterval(createBubble, 300);
     },
-    color: "#28a745",
-    duration: 0.5
+    // Når vi scroller UT av scenen:
+    onLeave: () => {
+        clearInterval(bubbleInterval); // Stopp å lage bobler
+    },
+    // Når vi scroller TILBAKE INN i scenen:
+    onEnterBack: () => {
+        bubbleInterval = setInterval(createBubble, 300);
+    },
+    // Når vi scroller TILBAKE UT av scenen:
+    onLeaveBack: () => {
+        clearInterval(bubbleInterval); // Stopp å lage bobler
+    }
 });
 
-// --- SCENE 5: SAMMENLIGNING FADE-IN ---
+// --- 6. KONTEKST FADE-IN (Scene 5) ---
 gsap.from(".comparison-container", {
-    opacity: 0,
-    y: 30,
-    duration: 1.0,
+    opacity: 0, y: 30, duration: 1.0,
     scrollTrigger: {
-        trigger: "#scene-5",
+        trigger: "#scene-5-kontekst",
         start: "top 60%",
         toggleActions: "play none none none"
     }
