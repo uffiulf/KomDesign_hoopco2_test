@@ -1,0 +1,16 @@
+# GitHub Pages configuration
+title: "Fra Avløp til Bobler: Hoop CO2"
+description: "En interaktiv scrollytelling-opplevelse som viser hvordan Hoop CO2 fanger og omdanner CO₂ fra avløpsgasser til nyttige produkter."
+baseurl: ""
+url: "https://uffiulf.github.io/KomDesign_hoopco2_test"
+
+# GitHub Pages settings
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - .gitignore
+  - .github/
