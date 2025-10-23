@@ -159,10 +159,10 @@ gsap.to(".dashboard-card", {
     }
 });
 
-// --- SCENE 4: NEW BECCS ANIMATION ---
+// --- SCENE 4: NEW BECCS ANIMATION (CORRECT SEQUENCE) ---
 
-// Set boat's starting position (off-screen right)
-gsap.set("#beccs-skip", { x: "100vw", opacity: 1 }); // Ensure opacity is 1 initially
+// Set boat's starting position (off-screen right) AND ensure it's visible initially
+gsap.set("#beccs-skip", { x: "100vw", opacity: 1 }); 
 
 let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
@@ -180,13 +180,13 @@ beccsTidslinje.to("#beccs-skip", {
     duration: 1.5 // Adjust duration as needed
 });
 
-// 2. Pipe draws after boat starts arriving
+// 2. Pipe draws *after* boat starts arriving
 beccsTidslinje.to("#beccs-pipe-path", {
     strokeDashoffset: 0,
     ease: "none"
 }, "<0.5"); // Start drawing 0.5s after boat starts moving in
 
-// 3. Particles drop after the pipe is fully drawn
+// 3. Particles drop *after* the pipe is fully drawn
 // (Ensure .beccs-particle elements exist in HTML & CSS)
 beccsTidslinje.to(".beccs-particle", {
     opacity: 1,
