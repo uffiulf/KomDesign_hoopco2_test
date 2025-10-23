@@ -104,25 +104,20 @@ let scene2ActiveTimeline = gsap.timeline({
     }
 });
 
-// 1. Particle moves from Kilde -> Rensing
+// 1. Particle moves from Kilde -> Rensing AND FADES color
 scene2ActiveTimeline.to(".anim-co2-partikkel", {
     x: 375,
+    backgroundColor: "var(--color-green)", // Add this
     ease: "none"
 }, "<"); // "<" means "at the very start"
 
-// 2. Particle turns GREEN
-scene2ActiveTimeline.to(".anim-co2-partikkel", {
-    backgroundColor: "var(--color-green)",
-    ease: "none"
-}, "<");
-
-// 3. Red Teller DIMS
+// 2. Red Teller DIMS
 scene2ActiveTimeline.to("#co2-teller, #teller-label", {
     opacity: 0.3,
     ease: "none"
 }, "<");
 
-// 4. Green Teller SHOWS
+// 3. Green Teller SHOWS
 scene2ActiveTimeline.to("#co2-teller-fangst, #teller-label-fangst", {
     opacity: 1,
     visibility: "visible",
@@ -146,6 +141,18 @@ scene3Timeline.to(".anim-co2-partikkel", {
     ease: "none"
 });
 
+
+// --- FADE OUT DASHBOARD CARD ---
+gsap.to(".dashboard-card", {
+    opacity: 0,
+    visibility: "hidden",
+    scrollTrigger: {
+        trigger: "#scene-4", // Triggered by the BECCS scene
+        start: "top center", // As it enters the center
+        end: "top top",
+        toggleActions: "play none none reverse" // Fade out, but reappear if scrolling back up
+    }
+});
 
 // --- 4. BECCS PROSESS-ANIMASJON (Scene 4) (Oppgradert med partikler) ---
 let beccsTidslinje = gsap.timeline({
