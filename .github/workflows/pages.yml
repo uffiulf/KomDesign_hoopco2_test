@@ -14,10 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: https://uffiulf.github.io/KomDesign_hoopco2_test/
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,7 +27,14 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-          
+
+  deploy:
+    environment:
+      name: github-pages
+      url: https://uffiulf.github.io/KomDesign_hoopco2_test/
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
