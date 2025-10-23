@@ -1,0 +1,359 @@
+/* 1. Globalt Oppsett og Design System */
+:root {
+    --font-main: 'Inter', sans-serif;
+    --color-text: #333;
+    --color-bg-light: #f9f9f9;
+    --color-bg-dark: #1a1a2e;
+    --color-primary: #0056b3;
+    --color-green: #28a745;
+    --color-red: #d9534f;
+}
+
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    color: #f0f4f8;
+    background-color: var(--color-bg-dark);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 2. Lasteskjerm */
+#loader {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--color-bg-dark); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+}
+.spinner { /* Enkel CSS-spinner */
+    width: 50px; height: 50px; border: 5px solid #fff;
+    border-top-color: var(--color-primary); border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* 3. Scrollytelling-Struktur */
+.scrolly-container {
+    display: flex;
+    position: relative;
+}
+.scrolly-text-column {
+    width: 45%;
+    padding: 0 5%;
+}
+.scrolly-graphic-column {
+    width: 55%;
+    height: 100vh;
+    position: sticky; /* Nøkkelen! */
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.text-scene {
+    min-height: 100vh; /* Hver tekstseksjon er 1 skjermhøyde */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0.4; /* Fades inn ved aktivt steg */
+    transition: opacity 0.5s ease-out;
+}
+.text-scene.is-active { opacity: 1; }
+.text-scene h2 { font-size: 2.5rem; color: #f0f4f8; }
+/* Subtile bakgrunnselementer */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(0,86,179,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(40,167,69,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(217,83,79,0.05) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Forbedret tekst-kontrast */
+.text-scene p {
+    font-size: 1.1rem; 
+    line-height: 1.7;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Forbedret teller-etikett */
+#teller-label, #teller-label-fangst {
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    font-weight: 600;
+}
+
+/* 4. Grafikk-steg (CCU, BECCS, Teller) */
+.graphic-step {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.graphic-step.is-active { opacity: 1; visibility: visible; }
+
+/* 5. Styling av Telleren (Fast-posisjonert) */
+#co2-teller {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--color-red);
+    z-index: 100;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+#teller-label {
+    position: fixed;
+    top: 150px; 
+    right: 40px;
+    font-size: 0.9rem; 
+    font-weight: 700;
+    color: #777; /* Nøytral farge */
+    z-index: 100;
+    text-align: right;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+#co2-teller-fangst {
+    position: fixed;
+    top: 200px; /* Under den røde telleren */
+    right: 40px;
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--color-green);
+    z-index: 100;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+#teller-label-fangst {
+    position: fixed;
+    top: 310px; /* Under den grønne telleren */
+    right: 40px;
+    font-size: 0.9rem; 
+    font-weight: 700;
+    z-index: 100;
+    color: var(--color-green); /* Grønn farge */
+    text-align: right;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+/* Forbedret CCU-infografikk */
+#infografikk-1 {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    position: relative;
+    background: linear-gradient(135deg, rgba(0,86,179,0.1) 0%, rgba(40,167,69,0.1) 100%);
+    border-radius: 16px;
+    padding: 30px 20px;
+}
+.icon-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+.icon-container:hover {
+    transform: scale(1.05);
+}
+.anim-icon { 
+    color: var(--color-text);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.anim-label { 
+    margin-top: 15px; 
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.anim-co2-partikkel {
+    width: 30px; height: 30px; background-color: var(--color-red);
+    border-radius: 50%; position: absolute; top: 10px; left: 45px;
+}
+
+/* 7. Styling av BECCS-infografikk (Scene 4) */
+#infografikk-2 { 
+    width: 100%; 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(0,86,179,0.1) 0%, rgba(0,86,179,0.05) 50%, rgba(150,122,109,0.1) 100%);
+    border-radius: 16px;
+    padding: 20px;
+}
+#beccs-svg { width: 100%; height: 350px; }
+#beccs-skip {
+    position: absolute; 
+    top: 20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    animation: float 3s ease-in-out infinite;
+}
+#beccs-pipe-path { 
+    stroke-dashoffset: 230; 
+    stroke-dasharray: 230;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+#beccs-bottom-svg {
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* BECCS-animasjoner */
+@keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+@keyframes co2-flow {
+    0% { transform: translateY(0px); opacity: 0.8; }
+    100% { transform: translateY(200px); opacity: 0; }
+}
+
+.beccs-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-green);
+    opacity: 0;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 8. Globale Bobler */
+#bubble-container {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    overflow: hidden; 
+    z-index: -1;
+    pointer-events: none;
+}
+.bubble {
+    position: absolute;
+    bottom: -100px; /* Start utenfor skjermen */
+    background-color: rgba(217, 83, 79, 0.2); /* Gjennomsiktig rød */
+    border-radius: 50%;
+    animation: rise 10s infinite;
+    opacity: 0;
+}
+
+/* CSS-animasjonen som flytter boblen opp og fader den ut */
+@keyframes rise {
+    0% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-120vh); /* Flytt den langt over skjermen */
+        opacity: 0;
+    }
+}
+
+/* 9. Styling av Scene 0 (Hero) og Scene 5 (Kontekst) */
+.fullskjerm-scene {
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 2rem; box-sizing: border-box;
+}
+#scene-0 h1 { font-size: 4.5rem; margin: 0; }
+#scene-0 p { font-size: 1.2rem; opacity: 0.7; }
+
+/* Sammenligningsboksene (Scene 5) */
+.comparison-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+    opacity: 0; /* Vil fade inn */
+}
+.comparison-box {
+    width: 45%;
+    padding: 20px;
+    border-radius: 8px;
+    background: rgba(255,255,255, 0.1);
+    border: 1px solid #f0f4f8;
+}
+.comparison-box h3 { 
+    font-size: 1.2rem; 
+    margin-top: 0; 
+}
+.status {
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+.verified { 
+    background-color: #28a745; 
+    color: white; 
+}
+.unverified { 
+    background-color: #d9534f; 
+    color: white; 
+}
+
+/* 10. Kildeliste */
+.scene-kilder {
+    padding: 80px 40px;
+    background-color: #f9f9f9;
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.scene-kilder h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.scene-kilder ol {
+    padding-left: 20px;
+}
+.scene-kilder li {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.scene-kilder a {
+    color: #0056b3;
+    text-decoration: none;
+}
+.scene-kilder a:hover {
+    text-decoration: underline;
+}
+sup a {
+    text-decoration: none;
+    color: #0056b3;
+    font-weight: bold;
+}
