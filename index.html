@@ -15,10 +15,17 @@
     <div class="spinner"></div>
   </div>
 
+  <div id="bubble-container"></div>
+
+  <div id="co2-teller">0</div>
+  <div id="teller-label">CO2-UTSLIPP (TONN)</div>
+  <div id="co2-teller-fangst">0</div>
+  <div id="teller-label-fangst">CO2-FANGST (TONN)</div>
+
   <section class="fullskjerm-scene" id="scene-0">
-    <h1>Fra Avløp til Bobler</h1>
-    <h2>Hoop CO2</h2>
-    <p>En reise gjennom CO₂-utslipp og løsninger</p>
+    <h1>Hoop CO2</h1>
+    <h2>Fra Avløp til Bobler</h2>
+    <p>En reise gjennom CO₂-utslipp og løsninger.</p>
   </section>
 
   <div class="scrolly-container">
@@ -31,6 +38,11 @@
       <section id="scene-2" class="text-scene">
         <h2>Løsningen</h2>
         <p>Hoop CO₂ fanger opp CO₂ fra avløpsgasser og omdanner dem til nyttige produkter.</p>
+      </section>
+
+      <section id="scene-2-active" class="text-scene">
+        <h2>Fangsten starter</h2>
+        <p>Anlegget er nå operativt. Den røde partikkelen (utslipp) blir fanget, renset, og blir grønn (verdi).</p>
       </section>
 
       <section id="scene-3" class="text-scene">
@@ -46,11 +58,6 @@
 
     <div class="scrolly-graphic-column">
       <div class="graphic-step" data-index="0">
-        <div id="bubble-container"></div>
-        <div id="co2-teller">0</div>
-      </div>
-
-      <div class="graphic-step" data-index="1">
         <div id="infografikk-1">
           <div class="icon-container">
             <i class="fa-solid fa-industry fa-3x anim-icon"></i>
@@ -71,16 +78,17 @@
         </div>
       </div>
 
-      <div class="graphic-step" data-index="2">
-        <div class="result-visual">
-          <div class="clean-air">🌱</div>
-          <div class="products">📦</div>
-        </div>
-      </div>
-
-      <div class="graphic-step" data-index="3">
+      <div class="graphic-step" data-index="1">
         <div id="infografikk-2">
           <i class="fa-solid fa-ship fa-2x" id="beccs-skip"></i>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
+          <div class="beccs-particle"></div>
           <svg id="beccs-svg" viewBox="0 0 300 300">
             <path id="beccs-pipe-path" d="M 150 20 L 150 250" stroke="#333a45" stroke-width="4" fill="none" stroke-dasharray="230" stroke-dashoffset="230"/>
             <rect id="beccs-bottom-svg" x="0" y="250" width="300" height="50" fill="#967a6d" />

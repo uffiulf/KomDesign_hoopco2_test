@@ -13,8 +13,8 @@ html { scroll-behavior: smooth; }
 body {
     font-family: var(--font-main);
     margin: 0;
-    color: var(--color-text);
-    background-color: var(--color-bg-light);
+    color: #f0f4f8;
+    background-color: var(--color-bg-dark);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -58,8 +58,35 @@ body {
     transition: opacity 0.5s ease-out;
 }
 .text-scene.is-active { opacity: 1; }
-.text-scene h2 { font-size: 2.5rem; color: var(--color-primary); }
-.text-scene p { font-size: 1.1rem; line-height: 1.7; }
+.text-scene h2 { font-size: 2.5rem; color: #f0f4f8; }
+/* Subtile bakgrunnselementer */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(0,86,179,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(40,167,69,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(217,83,79,0.05) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Forbedret tekst-kontrast */
+.text-scene p {
+    font-size: 1.1rem; 
+    line-height: 1.7;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Forbedret teller-etikett */
+#teller-label, #teller-label-fangst {
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    font-weight: 600;
+}
 
 /* 4. Grafikk-steg (CCU, BECCS, Teller) */
 .graphic-step {
@@ -72,40 +99,164 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.5s, visibility 0.5s;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 .graphic-step.is-active { opacity: 1; visibility: visible; }
 
-/* 5. Styling av Telleren (Nå i .graphic-step) */
+/* 5. Styling av Telleren (Fast-posisjonert) */
 #co2-teller {
-    font-size: 8rem; font-weight: 700; color: var(--color-red);
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--color-red);
+    z-index: 100;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
 }
 
-/* 6. Styling av CCU-infografikk (Scene 2) */
-#infografikk-1 {
-    display: flex; justify-content: space-between; align-items: center;
-    width: 100%; position: relative;
+#teller-label {
+    position: fixed;
+    top: 150px; 
+    right: 40px;
+    font-size: 0.9rem; 
+    font-weight: 700;
+    color: #777; /* Nøytral farge */
+    z-index: 100;
+    text-align: right;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
 }
-.icon-container { display: flex; flex-direction: column; align-items: center; }
-.anim-icon { color: var(--color-text); }
-.anim-label { margin-top: 15px; font-weight: 700; }
+
+#co2-teller-fangst {
+    position: fixed;
+    top: 200px; /* Under den røde telleren */
+    right: 40px;
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--color-green);
+    z-index: 100;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+#teller-label-fangst {
+    position: fixed;
+    top: 310px; /* Under den grønne telleren */
+    right: 40px;
+    font-size: 0.9rem; 
+    font-weight: 700;
+    z-index: 100;
+    color: var(--color-green); /* Grønn farge */
+    text-align: right;
+    opacity: 0; /* Skjult som standard */
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+/* Forbedret CCU-infografikk */
+#infografikk-1 {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    position: relative;
+    background: linear-gradient(135deg, rgba(0,86,179,0.1) 0%, rgba(40,167,69,0.1) 100%);
+    border-radius: 16px;
+    padding: 30px 20px;
+}
+.icon-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+.icon-container:hover {
+    transform: scale(1.05);
+}
+.anim-icon { 
+    color: var(--color-text);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.anim-label { 
+    margin-top: 15px; 
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
 .anim-co2-partikkel {
     width: 30px; height: 30px; background-color: var(--color-red);
     border-radius: 50%; position: absolute; top: 10px; left: 45px;
 }
 
 /* 7. Styling av BECCS-infografikk (Scene 4) */
-#infografikk-2 { width: 100%; }
-#beccs-svg { width: 100%; height: 300px; }
-#beccs-skip {
-    position: absolute; top: 0; left: 135px; /* Må justeres */
-    color: var(--color-text);
+#infografikk-2 { 
+    width: 100%; 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(0,86,179,0.1) 0%, rgba(0,86,179,0.05) 50%, rgba(150,122,109,0.1) 100%);
+    border-radius: 16px;
+    padding: 20px;
 }
-#beccs-pipe-path { stroke-dashoffset: 230; stroke-dasharray: 230; }
+#beccs-svg { width: 100%; height: 350px; }
+#beccs-skip {
+    position: absolute; 
+    top: 20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    animation: float 3s ease-in-out infinite;
+}
+#beccs-pipe-path { 
+    stroke-dashoffset: 230; 
+    stroke-dasharray: 230;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+#beccs-bottom-svg {
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
 
-/* 8. Boble-animasjon (Scene 1) */
+/* BECCS-animasjoner */
+@keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+@keyframes co2-flow {
+    0% { transform: translateY(0px); opacity: 0.8; }
+    100% { transform: translateY(200px); opacity: 0; }
+}
+
+.beccs-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-green);
+    opacity: 0;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 8. Globale Bobler */
 #bubble-container {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    overflow: hidden; z-index: -1;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    overflow: hidden; 
+    z-index: -1;
+    pointer-events: none;
 }
 .bubble {
     position: absolute;
@@ -137,11 +288,8 @@ body {
     align-items: center; justify-content: center; text-align: center;
     padding: 2rem; box-sizing: border-box;
 }
-#scene-0 { background-color: var(--color-bg-dark); color: white; }
 #scene-0 h1 { font-size: 4.5rem; margin: 0; }
 #scene-0 p { font-size: 1.2rem; opacity: 0.7; }
-
-#scene-5-kontekst { background-color: var(--color-bg-dark); color: white; }
 
 /* Sammenligningsboksene (Scene 5) */
 .comparison-container {

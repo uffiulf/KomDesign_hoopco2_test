@@ -8,43 +8,60 @@ window.addEventListener('load', () => {
 
 // --- 1. HOVEDFUNKSJON FOR SCROLLYTELLING ---
 function initScrollytelling() {
-    // Hent alle tekstelementene
-    const textScenes = gsap.utils.toArray('.text-scene');
+    const graphicSteps = gsap.utils.toArray('.graphic-step');
+    // VIKTIG: data-index er nå 0 (CCU) og 1 (BECCS)
+    graphicSteps.forEach((step, i) => step.setAttribute('data-index', i));
 
-    // Loop gjennom hver tekst-scene
-    textScenes.forEach((scene, i) => {
-        const graphicStep = document.querySelector(`.graphic-step[data-index="${i}"]`);
+    // Manuell mapping [Tekst-scene-ID, Grafikk-index-den-skal-vise]
+    const mapping = [
+        ["#scene-1", -1], // Problemet
+        ["#scene-2", 0],  // Løsningen (Viser grafikk 0, statisk)
+        ["#scene-2-active", 0], // Fangsten Starter (Viser OGSÅ grafikk 0)
+        ["#scene-3", 0],  // Resultatet (Viser OGSÅ grafikk 0)
+        ["#scene-4", 1]   // BECCS (Viser grafikk 1)
+    ];
+
+    mapping.forEach(([sceneID, graphicIndex]) => {
+        const scene = document.querySelector(sceneID);
 
         ScrollTrigger.create({
             trigger: scene,
             start: 'top center',
             end: 'bottom center',
-            // Marker/avmarker aktivt steg
             onToggle: self => {
-                if (self.isActive) {
-                    scene.classList.add('is-active');
-                    if (graphicStep) graphicStep.classList.add('is-active');
-                } else {
-                    scene.classList.remove('is-active');
-                    if (graphicStep) graphicStep.classList.remove('is-active');
+                scene.classList.toggle('is-active', self.isActive);
+                // Toggler den riktige grafikken
+                if(graphicIndex !== -1) {
+                    graphicSteps[graphicIndex].classList.toggle('is-active', self.isActive);
                 }
             },
+            // Skrur av alle *andre* grafikk-steg
+            onEnter: () => graphicSteps.forEach((step, i) => { if(i !== graphicIndex) step.classList.remove('is-active'); }),
+            onEnterBack: () => graphicSteps.forEach((step, i) => { if(i !== graphicIndex) step.classList.remove('is-active'); }),
         });
     });
 
-    // Gi de grafiske stegene en data-index som matcher tekst-scenene
-    gsap.utils.toArray('.graphic-step').forEach((step, i) => {
-        step.setAttribute('data-index', i);
-    });
-
-    // Sørg for at det første steget er aktivt fra start
-    document.querySelector('.text-scene').classList.add('is-active');
-    document.querySelector('.graphic-step[data-index="0"]').classList.add('is-active');
+    // Aktiver det første tekst-steget (Scene 1)
+    document.querySelector('#scene-1').classList.add('is-active');
 }
 
 initScrollytelling(); // Kjør hovedfunksjonen
 
-// --- 2. TELLER-ANIMASJON (Scene 1) ---
+// --- 2. TELLER-SYNLIGHET OG ANIMASJON ---
+// Styrer synligheten til den faste telleren og etiketten
+gsap.to("#co2-teller, #teller-label", {
+    opacity: 1,
+    visibility: 'visible',
+    scrollTrigger: {
+        trigger: "#scene-1",
+        start: "top center",
+        endTrigger: "#scene-4", // Hold den synlig til Scene 4 er ferdig
+        end: "bottom center",
+        toggleActions: "play reverse play reverse" // Fades inn og ut
+    }
+});
+
+// Teller-animasjon (rød teller) - Stopper når Scene 2 Active begynner
 gsap.to("#co2-teller", {
     innerText: 8000,
     snap: "innerText",
@@ -52,33 +69,169 @@ gsap.to("#co2-teller", {
     scrollTrigger: {
         trigger: "#scene-1",
         start: "top top",
+        endTrigger: "#scene-2-active",
+        end: "top 70%",
+        scrub: 1,
+    }
+});
+
+// Ny grønn teller - Starter når Scene 2 Active begynner
+gsap.to("#co2-teller-fangst", {
+    innerText: 5000,
+    snap: "innerText",
+    ease: "none",
+    scrollTrigger: {
+        trigger: "#scene-2-active",
+        start: "top 70%",
+        endTrigger: "#scene-3",
         end: "bottom bottom",
         scrub: 1,
     }
 });
 
-// --- 3. CCU PROSESS-ANIMASJON (Scene 2) ---
-let prosessTidslinje = gsap.timeline({
+
+
+
+
+// --- SCENE 2 ACTIVE: FANGST-ANIMASJON ---
+let scene2ActiveTimeline = gsap.timeline({
     scrollTrigger: {
-        trigger: "#scene-2",
-        start: "top top",
-        end: "bottom top", // Fiks for hastighet
-        scrub: 1, // Fiks for hastighet
+        trigger: "#scene-2-active",
+        start: "top 70%", // Start animation as this new scene scrolls in
+        end: "bottom center",
+        scrub: 1,
+        toggleActions: "play reverse play reverse"
     }
 });
-prosessTidslinje.to(".anim-co2-partikkel", { x: 375, ease: "none" });
-prosessTidslinje.to(".anim-co2-partikkel", { backgroundColor: "var(--color-green)", ease: "none" }, "-=0.2");
-prosessTidslinje.to(".anim-co2-partikkel", { x: 750, ease: "none" });
 
-// --- 4. BECCS PROSESS-ANIMASJON (Scene 4) (SVG "DRAW") ---
-gsap.to("#beccs-pipe-path", {
-    strokeDashoffset: 0, // Animerer "tegningen" av linjen
-    ease: "none",
+// 1. Particle moves from Kilde -> Rensing
+scene2ActiveTimeline.to(".anim-co2-partikkel", {
+    x: 375,
+    ease: "none"
+}, "<"); // "<" means "at the very start"
+
+// 2. Particle turns GREEN
+scene2ActiveTimeline.to(".anim-co2-partikkel", {
+    backgroundColor: "var(--color-green)",
+    ease: "none"
+}, "<");
+
+// 3. Red Teller DIMS
+scene2ActiveTimeline.to("#co2-teller, #teller-label", {
+    opacity: 0.3,
+    ease: "none"
+}, "<");
+
+// 4. Green Teller SHOWS
+scene2ActiveTimeline.to("#co2-teller-fangst, #teller-label-fangst", {
+    opacity: 1,
+    visibility: "visible",
+    ease: "none"
+}, "<");
+
+
+// --- SCENE 3: RESULTAT-ANIMASJON ---
+let scene3Timeline = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#scene-3",
+        start: "top center",
+        end: "bottom bottom",
+        scrub: 1,
+    }
+});
+
+// 1. Particle moves from Rensing -> Kunde
+scene3Timeline.to(".anim-co2-partikkel", {
+    x: 750, // Move to Kunde
+    ease: "none"
+});
+
+
+// --- 4. BECCS PROSESS-ANIMASJON (Scene 4) (Oppgradert med partikler) ---
+let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
         trigger: "#scene-4",
         start: "top top",
         end: "bottom bottom",
         scrub: 1,
+    }
+});
+
+// Steg 1: Skip skalere opp og bevege seg (kjøre)
+beccsTidslinje.to("#beccs-skip", { 
+    scale: 1.2,
+    x: 100, 
+    ease: "none",
+    duration: 0.2
+});
+
+// Steg 2: Skip skalere tilbake (stoppe)
+beccsTidslinje.to("#beccs-skip", { 
+    scale: 1,
+    ease: "none",
+    duration: 0.1
+});
+
+// Steg 3: Tegne rør
+beccsTidslinje.to("#beccs-pipe-path", {
+    strokeDashoffset: 0,
+    ease: "none",
+    duration: 0.4
+});
+
+// Steg 4: Slippe partikler (staggered)
+beccsTidslinje.to(".beccs-particle", {
+    opacity: 1,
+    y: 200,
+    ease: "none",
+    duration: 0.3,
+    stagger: 0.05 // Partikler faller én etter én
+});
+
+// CO2-partikler som flyter ned røret
+const beccsContainer = document.querySelector('#infografikk-2');
+let co2ParticleInterval;
+
+function createCO2Particle() {
+    if (!beccsContainer) return;
+    
+    const particle = document.createElement('div');
+    particle.classList.add('co2-particle');
+    
+    // Random timing og størrelse
+    particle.style.animationDelay = Math.random() * 2 + 's';
+    particle.style.animationDuration = (Math.random() * 2 + 3) + 's';
+    
+    // Random horisontal posisjon rundt røret
+    const offset = (Math.random() - 0.5) * 20;
+    particle.style.left = `calc(50% + ${offset}px)`;
+    
+    beccsContainer.appendChild(particle);
+    
+    // Fjern partikkelen etter animasjonen
+    setTimeout(() => {
+        if (particle.parentNode) {
+            particle.remove();
+        }
+    }, 6000);
+}
+
+// Start/stop CO2-partikler basert på scrolling
+ScrollTrigger.create({
+    trigger: "#scene-4",
+    start: "top bottom",
+    end: "bottom top",
+    onEnter: () => {
+        co2ParticleInterval = setInterval(createCO2Particle, 800);
+    },
+    onLeave: () => {
+        clearInterval(co2ParticleInterval);
+    },
+    onEnterBack: () => {
+        co2ParticleInterval = setInterval(createCO2Particle, 800);
+    },
+    onLeaveBack: () => {
+        clearInterval(co2ParticleInterval);
     }
 });
 
@@ -114,28 +267,13 @@ function createBubble() {
     }, 13000); // Litt lenger enn maks animasjonstid
 }
 
-// Styrer når boble-maskinen skal skrus av og på
+// Globale bobler - starter én gang og stopper aldri
 ScrollTrigger.create({
-    trigger: "#scene-1",
-    start: "top bottom", // Når toppen av scenen treffer bunnen av skjermen
-    end: "bottom top", // Når bunnen av scenen treffer toppen
-
-    // Når vi scroller INN i scenen:
+    trigger: "body",
+    start: "top top",
     onEnter: () => {
         // Start å lage bobler hvert 300ms
         bubbleInterval = setInterval(createBubble, 300);
-    },
-    // Når vi scroller UT av scenen:
-    onLeave: () => {
-        clearInterval(bubbleInterval); // Stopp å lage bobler
-    },
-    // Når vi scroller TILBAKE INN i scenen:
-    onEnterBack: () => {
-        bubbleInterval = setInterval(createBubble, 300);
-    },
-    // Når vi scroller TILBAKE UT av scenen:
-    onLeaveBack: () => {
-        clearInterval(bubbleInterval); // Stopp å lage bobler
     }
 });
 
