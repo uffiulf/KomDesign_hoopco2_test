@@ -203,6 +203,22 @@ body::before {
     border-radius: 50%; position: absolute; top: 10px; left: 85px;
 }
 
+/* Trigger boxes for particle animation */
+.trigger-box {
+    position: absolute;
+    height: 100%; /* Full height of the container */
+    width: 50px; /* Adjust width as needed */
+    /* Make them visible for debugging, then hide: */
+    /* background-color: rgba(255, 0, 0, 0.2); */
+    pointer-events: none; /* Ignore mouse events */
+}
+#trigger-fade-start {
+    left: 250px; /* Position halfway between Kilde and Rensing */
+}
+#trigger-fade-end {
+    left: 425px; /* Position directly over the Rensing icon */
+}
+
 /* 7. Styling av BECCS-infografikk (Scene 4) */
 #infografikk-2 { 
     width: 100%; 

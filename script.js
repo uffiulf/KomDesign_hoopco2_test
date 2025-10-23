@@ -117,32 +117,47 @@ scene2ActiveTimeline.to(".anim-co2-partikkel", {
     ease: "none"
 }, "<"); // "<" means "at the very start"
 
-// 2. Red Teller DIMS
-scene2ActiveTimeline.to("#co2-teller, #teller-label", {
-    opacity: 0.3,
-    ease: "none"
-}, "<");
+// --- NEW TRIGGER BOX LOGIC ---
 
-// 3. Green Teller SHOWS
-scene2ActiveTimeline.to("#co2-teller-fangst, #teller-label-fangst", {
-    opacity: 1,
-    visibility: "visible",
-    ease: "none"
-}, "<");
-
-// --- NEW PARTICLE COLOR FADE ---
-gsap.to(".anim-co2-partikkel", {
-    backgroundColor: "var(--color-green)", // Target color
-    ease: "none",
-    scrollTrigger: {
-        trigger: "#scene-2-active",
-        start: "top 70%", // Start fading when the scene starts
-        end: "bottom center", // Finish fading by the end of the scene
-        scrub: true, // Link fade directly to scroll position
-        // NO toggleActions needed here, scrub handles reverse automatically
-    }
+// 1. Start FADING particle to green when it ENTERS the first box
+ScrollTrigger.create({
+    trigger: "#trigger-fade-start",
+    containerAnimation: scene2ActiveTimeline, // Link to particle movement timeline
+    start: "left center", // When left edge of box hits particle center
+    onEnter: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-green)", duration: 0.5}),
+    onLeaveBack: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-red)", duration: 0.5}),
+    // markers: true // Uncomment for debugging
 });
 
+// 2. DIM Red Counter when particle ENTERS the first box
+ScrollTrigger.create({
+    trigger: "#trigger-fade-start",
+    containerAnimation: scene2ActiveTimeline,
+    start: "left center",
+    onEnter: () => gsap.to("#co2-teller, #teller-label", {opacity: 0.3, duration: 0.5}),
+    onLeaveBack: () => gsap.to("#co2-teller, #teller-label", {opacity: 1, duration: 0.5}),
+    // markers: true
+});
+
+// 3. SHOW Green Counter when particle ENTERS the first box
+ScrollTrigger.create({
+    trigger: "#trigger-fade-start",
+    containerAnimation: scene2ActiveTimeline,
+    start: "left center",
+    onEnter: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 1, visibility: "visible", duration: 0.5}),
+    onLeaveBack: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 0, visibility: "hidden", duration: 0.5}),
+    // markers: true
+});
+
+// 4. ENSURE particle is fully green when it ENTERS the second box (over Rensing)
+ScrollTrigger.create({
+    trigger: "#trigger-fade-end",
+    containerAnimation: scene2ActiveTimeline,
+    start: "left center",
+    onEnter: () => gsap.set(".anim-co2-partikkel", {backgroundColor: "var(--color-green)"}), // Instantly set to green
+    onLeaveBack: () => {}, // Don't instantly turn red here
+    // markers: true
+});
 
 // --- SCENE 3: RESULTAT-ANIMASJON ---
 let scene3Timeline = gsap.timeline({
