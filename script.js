@@ -111,10 +111,9 @@ let scene2ActiveTimeline = gsap.timeline({
     }
 });
 
-// 1. Particle moves from Kilde -> Rensing AND FADES color
+// 1. Particle moves from Kilde -> Rensing
 scene2ActiveTimeline.to(".anim-co2-partikkel", {
     x: 375,
-    backgroundColor: "var(--color-green)", // Add this
     ease: "none"
 }, "<"); // "<" means "at the very start"
 
@@ -130,6 +129,19 @@ scene2ActiveTimeline.to("#co2-teller-fangst, #teller-label-fangst", {
     visibility: "visible",
     ease: "none"
 }, "<");
+
+// --- NEW PARTICLE COLOR FADE ---
+gsap.to(".anim-co2-partikkel", {
+    backgroundColor: "var(--color-green)", // Target color
+    ease: "none",
+    scrollTrigger: {
+        trigger: "#scene-2-active",
+        start: "top 70%", // Start fading when the scene starts
+        end: "bottom center", // Finish fading by the end of the scene
+        scrub: true, // Link fade directly to scroll position
+        // NO toggleActions needed here, scrub handles reverse automatically
+    }
+});
 
 
 // --- SCENE 3: RESULTAT-ANIMASJON ---
@@ -164,7 +176,7 @@ gsap.to(".dashboard-card", {
 // --- SCENE 4: NEW BECCS ANIMATION ---
 
 // Set boat's starting position (off-screen right)
-gsap.set("#beccs-skip", { x: "100vw" }); 
+gsap.set("#beccs-skip", { x: "100vw", opacity: 1 }); // Ensure opacity is 1 initially
 
 let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
@@ -175,26 +187,27 @@ let beccsTidslinje = gsap.timeline({
     }
 });
 
-// Steg 1: Båten kjører inn fra høyre
+// 1. Boat drives in from the right
 beccsTidslinje.to("#beccs-skip", {
-    x: 0, // Kjører til sin sentrerte posisjon
-    ease: "power2.inOut"
+    x: 0, // Drives to its final centered position
+    ease: "power2.inOut",
+    duration: 1.5 // Adjust duration as needed
 });
 
-// Steg 2: Røret tegnes
+// 2. Pipe draws after boat starts arriving
 beccsTidslinje.to("#beccs-pipe-path", {
     strokeDashoffset: 0,
     ease: "none"
-}, ">-0.5"); // Starter litt før båten er helt fremme
+}, "<0.5"); // Start drawing 0.5s after boat starts moving in
 
-// Steg 3: Partiklene slippes
-// (Ensure .beccs-particle elements exist in HTML)
+// 3. Particles drop after the pipe is fully drawn
+// (Ensure .beccs-particle elements exist in HTML & CSS)
 beccsTidslinje.to(".beccs-particle", {
     opacity: 1,
-    y: 200, // Juster distansen
+    y: 200, // Adjust distance
     ease: "power1.in",
-    stagger: 0.2 // Slippes én etter én
-}, ">"); // Starter etter at røret er tegnet
+    stagger: 0.2 // Drop one by one
+}, ">-0.2"); // Start dropping slightly before pipe finishes drawing
 
 // CO2-partikler som flyter ned røret
 const beccsContainer = document.querySelector('#infografikk-2');
