@@ -1,5 +1,8 @@
 gsap.registerPlugin(ScrollTrigger);
 
+// Start bubbles immediately
+bubbleInterval = setInterval(createBubble, 300);
+
 // --- 0. LASTE-ANIMASJON ---
 const loader = document.getElementById('loader');
 window.addEventListener('load', () => {
@@ -154,7 +157,11 @@ gsap.to(".dashboard-card", {
     }
 });
 
-// --- 4. BECCS PROSESS-ANIMASJON (Scene 4) (Oppgradert med partikler) ---
+// --- SCENE 4: NEW BECCS ANIMATION ---
+
+// Set boat's starting position (off-screen right)
+gsap.set("#beccs-skip", { x: "100vw" }); 
+
 let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
         trigger: "#scene-4",
@@ -164,36 +171,26 @@ let beccsTidslinje = gsap.timeline({
     }
 });
 
-// Steg 1: Skip skalere opp og bevege seg (kjøre)
-beccsTidslinje.to("#beccs-skip", { 
-    scale: 1.2,
-    x: 100, 
-    ease: "none",
-    duration: 0.2
+// Steg 1: Båten kjører inn fra høyre
+beccsTidslinje.to("#beccs-skip", {
+    x: 0, // Kjører til sin sentrerte posisjon
+    ease: "power2.inOut"
 });
 
-// Steg 2: Skip skalere tilbake (stoppe)
-beccsTidslinje.to("#beccs-skip", { 
-    scale: 1,
-    ease: "none",
-    duration: 0.1
-});
-
-// Steg 3: Tegne rør
+// Steg 2: Røret tegnes
 beccsTidslinje.to("#beccs-pipe-path", {
     strokeDashoffset: 0,
-    ease: "none",
-    duration: 0.4
-});
+    ease: "none"
+}, ">-0.5"); // Starter litt før båten er helt fremme
 
-// Steg 4: Slippe partikler (staggered)
+// Steg 3: Partiklene slippes
+// (Ensure .beccs-particle elements exist in HTML)
 beccsTidslinje.to(".beccs-particle", {
     opacity: 1,
-    y: 200,
-    ease: "none",
-    duration: 0.3,
-    stagger: 0.05 // Partikler faller én etter én
-});
+    y: 200, // Juster distansen
+    ease: "power1.in",
+    stagger: 0.2 // Slippes én etter én
+}, ">"); // Starter etter at røret er tegnet
 
 // CO2-partikler som flyter ned røret
 const beccsContainer = document.querySelector('#infografikk-2');
@@ -273,16 +270,6 @@ function createBubble() {
         bubble.remove();
     }, 13000); // Litt lenger enn maks animasjonstid
 }
-
-// Globale bobler - starter én gang og stopper aldri
-ScrollTrigger.create({
-    trigger: "body",
-    start: "top top",
-    onEnter: () => {
-        // Start å lage bobler hvert 300ms
-        bubbleInterval = setInterval(createBubble, 300);
-    }
-});
 
 // --- 6. KONTEKST FADE-IN (Scene 5) ---
 gsap.from(".comparison-container", {
