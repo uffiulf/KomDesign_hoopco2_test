@@ -142,7 +142,7 @@ let scene3Timeline = gsap.timeline({
 
 // 1. Particle moves from Rensing -> Kunde
 scene3Timeline.to(".anim-co2-partikkel", {
-    x: 750, // Move to Kunde
+    x: 850, // Move to Kunde
     ease: "none"
 });
 

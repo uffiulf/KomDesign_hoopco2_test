@@ -1,6 +1,13 @@
-.video-container {
-    margin-top: 30px;
-    width: 100%;
+.dashboard-card {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(26, 26, 46, 0.7); /* Dark glass background */
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
 }
 
 .problem-video {
@@ -115,52 +122,43 @@ body::before {
 
 /* 5. Styling av Telleren (Fast-posisjonert) */
 #co2-teller {
-    position: fixed;
-    top: 40px;
-    right: 40px;
+    position: relative;
     font-size: 8rem;
     font-weight: 700;
     color: var(--color-red);
-    z-index: 100;
     opacity: 0; /* Skjult som standard */
     visibility: hidden;
     transition: opacity 0.5s, visibility 0.5s;
+    text-align: right;
 }
 
 #teller-label {
-    position: fixed;
-    top: 150px; 
-    right: 40px;
+    position: relative;
     font-size: 0.9rem; 
     font-weight: 700;
     color: #777; /* Nøytral farge */
-    z-index: 100;
     text-align: right;
     opacity: 0; /* Skjult som standard */
     visibility: hidden;
     transition: opacity 0.5s, visibility 0.5s;
+    margin-bottom: 15px;
 }
 
 #co2-teller-fangst {
-    position: fixed;
-    top: 200px; /* Under den røde telleren */
-    right: 40px;
+    position: relative;
     font-size: 8rem;
     font-weight: 700;
     color: var(--color-green);
-    z-index: 100;
     opacity: 0; /* Skjult som standard */
     visibility: hidden;
     transition: opacity 0.5s, visibility 0.5s;
+    text-align: right;
 }
 
 #teller-label-fangst {
-    position: fixed;
-    top: 310px; /* Under den grønne telleren */
-    right: 40px;
+    position: relative;
     font-size: 0.9rem; 
     font-weight: 700;
-    z-index: 100;
     color: var(--color-green); /* Grønn farge */
     text-align: right;
     opacity: 0; /* Skjult som standard */
@@ -199,7 +197,7 @@ body::before {
 }
 .anim-co2-partikkel {
     width: 30px; height: 30px; background-color: var(--color-red);
-    border-radius: 50%; position: absolute; top: 10px; left: 45px;
+    border-radius: 50%; position: absolute; top: 10px; left: 85px;
 }
 
 /* 7. Styling av BECCS-infografikk (Scene 4) */
