@@ -1,5 +1,9 @@
 gsap.registerPlugin(ScrollTrigger);
 
+// Declare variables at the top
+let bubbleInterval;
+const bubbleContainer = document.getElementById('bubble-container');
+
 // Start bubbles immediately
 bubbleInterval = setInterval(createBubble, 300);
 
@@ -240,9 +244,6 @@ ScrollTrigger.create({
 });
 
 // --- 5. BOBLE-GENERATOR (Scene 1) ---
-const bubbleContainer = document.getElementById('bubble-container');
-let bubbleInterval; // Vi definerer intervallet her
-
 function createBubble() {
     if (!bubbleContainer) return; // Sikkerhetssjekk
 
