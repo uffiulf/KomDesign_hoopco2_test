@@ -112,13 +112,34 @@ let scene2ActiveTimeline = gsap.timeline({
 });
 
 // 1. Particle moves from Kilde -> Rensing
-// 1. Particle moves Kilde -> Rensing AND FADES color (Integrated)
+// 1. Particle moves Kilde -> Rensing (NO COLOR CHANGE HERE)
 scene2ActiveTimeline.to(".anim-co2-partikkel", {
     x: 375,
-    backgroundColor: "var(--color-green)", // Add color tween here
     ease: "none",
     // Inherits toggleActions from the timeline's ScrollTrigger
 }, "<"); // "<" means "at the very start"
+
+// --- NEW TRIGGER BOX LOGIC ---
+ScrollTrigger.create({
+    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
+    onEnter: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-green)", duration: 0.5}),
+    onLeaveBack: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-red)", duration: 0.5}),
+});
+ScrollTrigger.create({
+    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
+    onEnter: () => gsap.to("#co2-teller, #teller-label", {opacity: 0.3, duration: 0.5}),
+    onLeaveBack: () => gsap.to("#co2-teller, #teller-label", {opacity: 1, duration: 0.5}),
+});
+ScrollTrigger.create({
+    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
+    onEnter: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 1, visibility: "visible", duration: 0.5}),
+    onLeaveBack: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 0, visibility: "hidden", duration: 0.5}),
+});
+ScrollTrigger.create({
+    trigger: "#trigger-fade-end", containerAnimation: scene2ActiveTimeline, start: "left center",
+    onEnter: () => gsap.set(".anim-co2-partikkel", {backgroundColor: "var(--color-green)"}),
+    onLeaveBack: () => {}, // Don't instantly turn red here
+});
 
 // --- SCENE 3: RESULTAT-ANIMASJON ---
 let scene3Timeline = gsap.timeline({
