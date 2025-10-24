@@ -119,24 +119,32 @@ scene2ActiveTimeline.to(".anim-co2-partikkel", {
     // Inherits toggleActions from the timeline's ScrollTrigger
 }, "<"); // "<" means "at the very start"
 
-// --- NEW TRIGGER BOX LOGIC ---
+// --- NEW TRIGGER BOX LOGIC (FIXED) ---
 ScrollTrigger.create({
-    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
+    trigger: "#trigger-fade-start", 
+    start: "left center",
+    end: "right center",
     onEnter: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-green)", duration: 0.5}),
     onLeaveBack: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-red)", duration: 0.5}),
 });
 ScrollTrigger.create({
-    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
+    trigger: "#trigger-fade-start", 
+    start: "left center",
+    end: "right center",
     onEnter: () => gsap.to("#co2-teller, #teller-label", {opacity: 0.3, duration: 0.5}),
     onLeaveBack: () => gsap.to("#co2-teller, #teller-label", {opacity: 1, duration: 0.5}),
 });
 ScrollTrigger.create({
-    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
+    trigger: "#trigger-fade-start", 
+    start: "left center",
+    end: "right center",
     onEnter: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 1, visibility: "visible", duration: 0.5}),
     onLeaveBack: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 0, visibility: "hidden", duration: 0.5}),
 });
 ScrollTrigger.create({
-    trigger: "#trigger-fade-end", containerAnimation: scene2ActiveTimeline, start: "left center",
+    trigger: "#trigger-fade-end", 
+    start: "left center",
+    end: "right center",
     onEnter: () => gsap.set(".anim-co2-partikkel", {backgroundColor: "var(--color-green)"}),
     onLeaveBack: () => {}, // Don't instantly turn red here
 });
@@ -182,7 +190,7 @@ let beccsTidslinje = gsap.timeline({
     }
 });
 
-beccsTidslinje.to("#beccs-skip", { x: 0, ease: "power2.inOut", duration: 1.5 });
+beccsTidslinje.to("#beccs-skip", { x: 0, ease: "power2.inOut" });
 beccsTidslinje.to("#beccs-pipe-path", { strokeDashoffset: 0, ease: "none" }, "<0.5"); 
 beccsTidslinje.to(".beccs-particle", { opacity: 1, y: 200, ease: "power1.in", stagger: 0.2 }, ">-0.2");
 
