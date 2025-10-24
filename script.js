@@ -119,26 +119,42 @@ scene2ActiveTimeline.to(".anim-co2-partikkel", {
     // Inherits toggleActions from the timeline's ScrollTrigger
 }, "<"); // "<" means "at the very start"
 
-// --- TRIGGER BOX LOGIC FOR PARTICLE COLOR & COUNTERS ---
-ScrollTrigger.create({
-    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
-    onEnter: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-green)", duration: 0.5}),
-    onLeaveBack: () => gsap.to(".anim-co2-partikkel", {backgroundColor: "var(--color-red)", duration: 0.5}),
+// --- NEW PARTICLE COLOR LOGIC BASED ON TIMELINE PROGRESS ---
+// Particle color change based on scroll progress through scene2ActiveTimeline
+gsap.to(".anim-co2-partikkel", {
+    backgroundColor: "var(--color-green)",
+    ease: "none",
+    scrollTrigger: {
+        trigger: "#scene-2-active",
+        start: "top 70%", // Match timeline start
+        end: "bottom center", // Match timeline end
+        scrub: true, // Use scrub for smooth transition
+    }
 });
-ScrollTrigger.create({
-    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
-    onEnter: () => gsap.to("#co2-teller, #teller-label", {opacity: 0.3, duration: 0.5}),
-    onLeaveBack: () => gsap.to("#co2-teller, #teller-label", {opacity: 1, duration: 0.5}),
+
+// Red counter opacity change (dim when particle turns green)
+gsap.to("#co2-teller, #teller-label", {
+    opacity: 0.3,
+    ease: "none",
+    scrollTrigger: {
+        trigger: "#scene-2-active",
+        start: "top 70%",
+        end: "bottom center",
+        scrub: true,
+    }
 });
-ScrollTrigger.create({
-    trigger: "#trigger-fade-start", containerAnimation: scene2ActiveTimeline, start: "left center",
-    onEnter: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 1, visibility: "visible", duration: 0.5}),
-    onLeaveBack: () => gsap.to("#co2-teller-fangst, #teller-label-fangst", {opacity: 0, visibility: "hidden", duration: 0.5}),
-});
-ScrollTrigger.create({
-    trigger: "#trigger-fade-end", containerAnimation: scene2ActiveTimeline, start: "left center",
-    onEnter: () => gsap.set(".anim-co2-partikkel", {backgroundColor: "var(--color-green)"}),
-    onLeaveBack: () => {}, // Don't instantly turn red here
+
+// Green counter visibility change (show when particle turns green)
+gsap.to("#co2-teller-fangst, #teller-label-fangst", {
+    opacity: 1,
+    visibility: "visible",
+    ease: "none",
+    scrollTrigger: {
+        trigger: "#scene-2-active",
+        start: "top 70%",
+        end: "bottom center",
+        scrub: true,
+    }
 });
 
 // --- SCENE 3: RESULTAT-ANIMASJON ---
@@ -179,10 +195,17 @@ let beccsTidslinje = gsap.timeline({
         start: "top top",
         end: "bottom bottom",
         scrub: 1,
+        onStart: () => console.log("BECCS animation started!"),
+        onUpdate: () => console.log("BECCS animation updating..."),
     }
 });
 
-beccsTidslinje.to("#beccs-skip", { x: 0, ease: "power2.inOut", duration: 1.5 });
+beccsTidslinje.to("#beccs-skip", { 
+    x: 0, 
+    ease: "power2.inOut",
+    onStart: () => console.log("Boat animation started!"),
+    onUpdate: () => console.log("Boat moving...")
+});
 beccsTidslinje.to("#beccs-pipe-path", { strokeDashoffset: 0, ease: "none" }, "<0.5"); 
 beccsTidslinje.to(".beccs-particle", { opacity: 1, y: 200, ease: "power1.in", stagger: 0.2 }, ">-0.2");
 
