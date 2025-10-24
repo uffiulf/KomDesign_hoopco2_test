@@ -175,7 +175,7 @@ let beccsTidslinje = gsap.timeline({
 
 // 1. Boat drives in from the right
 beccsTidslinje.to("#beccs-skip", {
-    x: 0, // Drives to its final centered position
+    x: "calc(50% - 50px)", // Centers the boat (50% - half boat width)
     ease: "power2.inOut",
     duration: 1.5 // Adjust duration as needed
 });
