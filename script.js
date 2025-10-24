@@ -162,7 +162,8 @@ gsap.to(".dashboard-card", {
 // --- SCENE 4: NEW BECCS ANIMATION (CORRECT SEQUENCE) ---
 
 // Set boat's starting position (off-screen right) AND ensure it's visible initially
-gsap.set("#beccs-skip", { x: "100vw", opacity: 1 }); 
+gsap.set("#beccs-skip", { x: 2000, opacity: 1 }); 
+console.log("Boat initial position set to 2000px");
 
 let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
@@ -170,14 +171,18 @@ let beccsTidslinje = gsap.timeline({
         start: "top top",
         end: "bottom bottom",
         scrub: 1,
+        onStart: () => console.log("BECCS animation started!"),
+        onUpdate: () => console.log("BECCS animation updating..."),
     }
 });
 
 // 1. Boat drives in from the right
 beccsTidslinje.to("#beccs-skip", {
-    x: "calc(50% - 50px)", // Centers the boat (50% - half boat width)
+    x: 100, // Simple pixel value - centers the boat
     ease: "power2.inOut",
-    duration: 1.5 // Adjust duration as needed
+    duration: 1.5, // Adjust duration as needed
+    onStart: () => console.log("Boat animation started!"),
+    onUpdate: () => console.log("Boat moving...")
 });
 
 // 2. Pipe draws *after* boat starts arriving

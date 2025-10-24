@@ -234,11 +234,10 @@ body::before {
 #beccs-skip {
     position: absolute; 
     top: 20px; 
-    left: 0; /* Let GSAP handle positioning completely */
     width: 100px;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     animation: float 3s ease-in-out infinite;
-    /* Let GSAP handle the transform */
+    /* Let GSAP handle ALL positioning */
     will-change: transform;
 }
 #beccs-pipe-path { 
