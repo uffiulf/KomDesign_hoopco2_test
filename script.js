@@ -162,7 +162,7 @@ gsap.to(".dashboard-card", {
 // --- SCENE 4: NEW BECCS ANIMATION (CORRECT SEQUENCE) ---
 
 // Set boat's starting position (off-screen right) AND ensure it's visible initially
-gsap.set("#beccs-skip", { x: "calc(100vw + 50px)", opacity: 1 }); 
+gsap.set("#beccs-skip", { x: "100vw", opacity: 1 }); 
 
 let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
