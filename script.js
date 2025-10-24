@@ -112,23 +112,13 @@ let scene2ActiveTimeline = gsap.timeline({
 });
 
 // 1. Particle moves from Kilde -> Rensing
+// 1. Particle moves Kilde -> Rensing AND FADES color (Integrated)
 scene2ActiveTimeline.to(".anim-co2-partikkel", {
     x: 375,
-    ease: "none"
-}, "<"); // "<" means "at the very start"
-
-// --- NEW PARTICLE COLOR FADE ---
-gsap.to(".anim-co2-partikkel", {
-    backgroundColor: "var(--color-green)", // Target color
+    backgroundColor: "var(--color-green)", // Add color tween here
     ease: "none",
-    scrollTrigger: {
-        trigger: "#scene-2-active",
-        start: "top 70%", // Start fading when the scene starts
-        end: "bottom center", // Finish fading by the end of the scene
-        scrub: true, // Link fade directly to scroll position
-        // NO toggleActions needed here, scrub handles reverse automatically
-    }
-});
+    // Inherits toggleActions from the timeline's ScrollTrigger
+}, "<"); // "<" means "at the very start"
 
 // --- SCENE 3: RESULTAT-ANIMASJON ---
 let scene3Timeline = gsap.timeline({
@@ -160,10 +150,7 @@ gsap.to(".dashboard-card", {
 });
 
 // --- SCENE 4: NEW BECCS ANIMATION (CORRECT SEQUENCE) ---
-
-// Set boat's starting position (off-screen right) AND ensure it's visible initially
-gsap.set("#beccs-skip", { x: 2000, opacity: 1 }); 
-console.log("Boat initial position set to 2000px");
+gsap.set("#beccs-skip", { x: "100vw", opacity: 1 }); 
 
 let beccsTidslinje = gsap.timeline({
     scrollTrigger: {
@@ -171,34 +158,12 @@ let beccsTidslinje = gsap.timeline({
         start: "top top",
         end: "bottom bottom",
         scrub: 1,
-        onStart: () => console.log("BECCS animation started!"),
-        onUpdate: () => console.log("BECCS animation updating..."),
     }
 });
 
-// 1. Boat drives in from the right
-beccsTidslinje.to("#beccs-skip", {
-    x: 100, // Simple pixel value - centers the boat
-    ease: "power2.inOut",
-    duration: 1.5, // Adjust duration as needed
-    onStart: () => console.log("Boat animation started!"),
-    onUpdate: () => console.log("Boat moving...")
-});
-
-// 2. Pipe draws *after* boat starts arriving
-beccsTidslinje.to("#beccs-pipe-path", {
-    strokeDashoffset: 0,
-    ease: "none"
-}, "<0.5"); // Start drawing 0.5s after boat starts moving in
-
-// 3. Particles drop *after* the pipe is fully drawn
-// (Ensure .beccs-particle elements exist in HTML & CSS)
-beccsTidslinje.to(".beccs-particle", {
-    opacity: 1,
-    y: 200, // Adjust distance
-    ease: "power1.in",
-    stagger: 0.2 // Drop one by one
-}, ">-0.2"); // Start dropping slightly before pipe finishes drawing
+beccsTidslinje.to("#beccs-skip", { x: 0, ease: "power2.inOut", duration: 1.5 });
+beccsTidslinje.to("#beccs-pipe-path", { strokeDashoffset: 0, ease: "none" }, "<0.5"); 
+beccsTidslinje.to(".beccs-particle", { opacity: 1, y: 200, ease: "power1.in", stagger: 0.2 }, ">-0.2");
 
 // CO2-partikler som flyter ned røret
 const beccsContainer = document.querySelector('#infografikk-2');
