@@ -239,6 +239,8 @@ body::before {
     width: 100px;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     animation: float 3s ease-in-out infinite;
+    /* Remove the transform conflict with GSAP animation */
+    will-change: transform;
 }
 #beccs-pipe-path { 
     stroke-dashoffset: 230; 
